@@ -27,6 +27,7 @@ These scripts require `ffmpeg` and `ffprobe` installed on your system.
 **Fedora / RHEL:**
 ```bash
 sudo dnf install ffmpeg
+```
 
 **Ubuntu / Debian:**
 ```bash

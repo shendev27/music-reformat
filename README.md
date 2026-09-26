@@ -27,3 +27,42 @@ These scripts require `ffmpeg` and `ffprobe` installed on your system.
 **Fedora / RHEL:**
 ```bash
 sudo dnf install ffmpeg
+
+**Ubuntu / Debian:**
+```bash
+sudo apt update && sudo apt install ffmpeg
+```
+
+**macOS (via Homebrew):**
+```bash
+brew install ffmpeg
+```
+
+---
+
+### 1. Embed Custom Artwork (`embed_custom_art.sh`)
+Pass any image file (PNG, JPG, WEBP, etc.) as an argument. The script automatically crops it to a square, resizes it to 500x500 YUV420p JPEG, and embeds it into every `.m4a` file in the current directory tree.
+
+```bash
+./embed_custom_art.sh /path/to/cover.jpg
+```
+
+### 2. Fix & Resize Existing Artwork (`resize_embedded_art.sh`)
+Scans all `.m4a` files in your current folder, extracts the existing embedded cover art, converts it to a compatible 500x500 YUV420p JPEG, and re-embeds it without altering the original audio stream.
+
+```bash
+./resize_embedded_art.sh
+```
+
+---
+
+## How It Works
+
+Legacy vehicle head units often fail to display album art due to two main reasons:
+
+1. **Excessive Image Dimensions:** High-resolution embedded artwork (e.g., 3000x3000px) exceeds head unit RAM/memory buffer limits.
+2. **Unsupported Color Profiles:** Modern art using PNG compression or CMYK/YUV444 JPEG profiles won't render on legacy hardware decoders.
+
+By enforcing a 1:1 aspect ratio, `500x500` pixel grid, and `yuv420p` pixel formatting, these scripts ensure your car screen renders album art reliably on every track.
+
+---

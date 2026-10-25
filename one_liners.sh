@@ -1,3 +1,7 @@
 #resizing thumbnail
 
 find . -type f -name "*.m4a" -print0 | while IFS= read -r -d '' file; do if ffprobe -v error -select_streams v:0 -show_entries stream=index -of csv=p=0 "$file" | grep -q '[0-9]'; then ffmpeg -y -i "$file" -vf "crop='min(iw,ih)':'min(iw,ih)',scale=500:500,format=yuv420p" -frames:v 1 /tmp/temp_art.jpg -loglevel error && ffmpeg -y -i "$file" -i /tmp/temp_art.jpg -map 0:a -map 1:v -c:a copy -c:v copy -disposition:v attached_pic temp_fixed.m4a -loglevel error && mv temp_fixed.m4a "$file" && rm /tmp/temp_art.jpg && echo "✔ Fixed: $file"; fi; done
+
+#apply custom thumbnail
+
+IMAGE="/path/to/your/image.jpg"; ffmpeg -y -i "$IMAGE" -vf "crop='min(iw,ih)':'min(iw,ih)',scale=500:500,format=yuv420p" -frames:v 1 /tmp/temp_art.jpg -loglevel error && find . -type f -name "*.m4a" -print0 | while IFS= read -r -d '' file; do echo "Applying art to: $file"; ffmpeg -y -i "$file" -i /tmp/temp_art.jpg -map 0:a -map 1:v -c:a copy -c:v copy -disposition:v attached_pic temp_fixed.m4a -loglevel error && mv temp_fixed.m4a "$file"; done; rm /tmp/temp_art.jpg
